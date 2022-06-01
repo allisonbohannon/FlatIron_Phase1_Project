@@ -13,17 +13,57 @@ function getSearchResults(searchType, searchTerm) {
     console.log(parsedSearch)
     fetch(`http://openlibrary.org/search.json?${parsedSearch}`)
     .then(response => response.json())
-    .then(searchResults => console.log(searchResults))
+    .then(searchResults => renderSearchResults(searchResults.docs))
 };
 
 function parsedSearchType(searchType) {
     let parsedType; 
     switch(searchType) {
-        case 'author': parsedType = 'author';
-        case 'title': parsedType = 'title';
-        default: parsedType = 'q'
+        case 'author': 
+            parsedType = 'author';
+            break;
+        case 'title': 
+            parsedType = 'title';
+            break;
+        default: 
+            parsedType = 'q';
+            break;
     }
     return parsedType;
 }
 
-function renderSearchResults() {}; 
+function renderSearchResults(results) {
+    const resultsContainer = document.getElementById('search-results'); 
+    removeAllChildNodes(resultsContainer);
+    const displayedResults = [];
+    results.forEach(result => {
+        const titleAuthor = {
+            title: result.title, 
+            author: result.author_name,
+        }
+        if(!displayedResults.includes(titleAuthor)) {
+            renderSearchResult(result)
+            displayedResults.push(titleAuthor)
+        }
+     //add in an if statement to print 'No results' if displayedResults is empty   
+    })
+}; 
+
+function renderSearchResult(result) {
+    
+    const resultCard = document.createElement('li'); 
+    resultCard.innerHTML = `
+        <h3>Title: ${result.title}</h3>
+        <h3>Author(s): ${result.author_name}</h3>
+        <p id = 'published-year' >Published: ${result.first_publish_year}</p>
+        <p id = 'pages' class = 'hidden'>Pages: ${result.number_of_pages_median}</p>
+        <p id = 'subjects' class = 'hidden'>Subjects: ${result.subject}</p>
+    `
+    document.getElementById('search-results').appendChild(resultCard);
+};
+
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
