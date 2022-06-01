@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">  
     <title>My Reads</title>
 </head>
 <body>
@@ -11,50 +15,53 @@
         <h1>my reads</h1>
         <p>what kind of reader are you?</p>
     </header>
-    <div class = 'search-container'>
-        <section class = 'search-form'>
-            <form>
-                <label
-                for="search-type"
-                >search by</label>
-                <select
-                id="search-type"
-                name="earch-type">
-                    <option value="title" >title</option>
-                    <option value="author" >author</option>
-                    <option value="subject" >subject</option>
-                </select>
+    <main>
+        <div class = 'search-container'>
+            <h2>find reads</h3>
+            <section class = 'sear  ch-form'>
+                <form>
+                    <label
+                    for="search-type"
+                    >search by</label>
+                    <select
+                    id="search-type"
+                    name="earch-type">
+                        <option value="title" >title</option>
+                        <option value="author" >author</option>
+                        <option value="subject" >subject</option>
+                    </select>
+                    <input
+                    type="text"
+                    name="title"
+                    value=""
+                    class="input-text"
+                    id="input-data"
+                />
                 <input
-                type="text"
-                name="title"
-                value=""
-                class="input-text"
-                id="input-data"
-              />
-              <input
-                type="submit"
-                name="submit"
-                value="search"
-                class="submit"
-              />
-            </form>
-        </section>
-        <section class = 'search-results-container'>
-            <ul id = 'search-results'></ul>
-        </section>
+                    type="submit"
+                    name="submit"
+                    value="search"
+                    class="submit"
+                />
+                </form>
+            </section>
+            <section class = 'search-results-container'>
+                <ul id = 'search-results'></ul>
+            </section>
 
-    </div>
-    <div class = 'want-to-read-container'>
-        <h2>need to read</h2>
-    </div>
-    <div class = 'have-read-container'>
-        <section class = 'my-favorite-reads'>
-            <h2>have read</h2>
-        </section>
-        <section class = 'my-reading-stats'>
-            <h2>my stats</h2>
-        </section>
-    </div>
+        </div>
+        <div class = 'want-to-read-container'>
+            <h2>need to read</h2>
+        </div>
+        <div class = 'have-read-container'>
+            <section class = 'my-favorite-reads'>
+                <h2>recent reads</h2>
+            </section>
+            <section class = 'my-reading-stats'>
+                <h2>my stats</h2>
+            </section>
+        </div>
+    </main>
     <script type="text/javascript" src="index.js"></script>
 </body>
 </html>

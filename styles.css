@@ -1,0 +1,68 @@
+body {
+    font-family: 'Special Elite', cursive;
+    background-color: rgb(163, 163, 117)
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+    font-size: 32;
+} 
+
+header p {
+    display: flex;
+    justify-content: center;
+}
+
+main {
+    display: flex; 
+    justify-content: space-around;
+}
+
+main div {
+    background-color: beige;
+    padding: 20px; 
+}
+
+ul {
+    list-style: none; 
+}
+
+li {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    border: 1px solid gray; 
+    margin: 8px;
+    padding: 10px; 
+    background-color: rgb(249, 249, 240);
+    box-shadow: 3px 4px rgb(163, 163, 117);
+    max-width: 80%;
+}
+
+button {
+    font-family:  font-family: 'Special Elite', cursive;
+}
+
+.search-container {
+   display: block; 
+   justify-items: space-around;
+   max-width: 45%;
+   min-height: 400px; 
+}
+
+.want-to-read-container {
+    min-width: 25%; 
+    height: 80%; 
+    min-height: 400px; 
+}
+
+.have-read-container  {
+    min-width: 25%; 
+}
+
+.hidden {
+    visibility: hidden;
+    font-size: 1px; 
+    height: 80%; 
+}
+
+
