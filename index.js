@@ -1,8 +1,11 @@
+const wantToReadList = []; 
+const alreadyReadList= []; 
+
 document.addEventListener('DOMContentLoaded', () => {
     
     renderWantToReadList(); 
 
-    renderHaveReadList(); 
+    renderAlreadyReadList(); 
 
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -71,7 +74,7 @@ function renderSearchResult(result) {
         <p><strong>Author(s)</strong>: ${result.author_name}</h3>
         <p id = 'published-year' ><strong>Published:</strong> ${result.first_publish_year}</p>
         <button class = 'want-to-read-button'>want to read</button>
-        <button class = 'already-read-buttton'>already read</button>
+        <button class = 'already-read-button'>already read</button>
     `
     resultCard.querySelector('.want-to-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
@@ -79,7 +82,7 @@ function renderSearchResult(result) {
     })
     resultCard.querySelector('.already-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
-        addAlreadyRead(isbn); 
+        fetchAlreadyRead(isbn); 
     })
     document.getElementById('search-results').appendChild(resultCard);
 };
@@ -118,11 +121,9 @@ function postWantToRead(result) {
 }
 
 function renderWantToReadList() {
-    //initiate list; potentially create blocker to keep from adding dupes 
-    const wantToReadList = []; 
     fetch('http://localhost:3000/wants')
     .then(response => response.json())
-    .then(data => data.forEach(result => renderWantToRead(result)))
+    .then(data => data.forEach(result => renderWantToRead(result, wantToReadList)))
 }
 //Render persistent cards for books on want to read list
 //Check to alert user if they already have a book on another list
@@ -139,7 +140,7 @@ function renderWantToRead(result) {
             <button id = "read-want"> read it! </button>
         `
         document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
-    } else if (haveReadyList.includes(result.isbn){
+    } else if (alreadyReadList.includes(result.isbn)) {
         alert(`you've already read this book!`)
     } else {
         alert(`You've already added this book!`)
@@ -152,7 +153,7 @@ function fetchAlreadyRead(isbn) {
     .then(searchResults => postAlreadyRead(searchResults.docs[0]))
 }; 
 
-function postAlreadyRead(isbn) {
+function postAlreadyRead(result) {
     const alreadyReadObj = {
         title: result.title,
         author: result.author_name, 
@@ -173,45 +174,31 @@ function postAlreadyRead(isbn) {
 }; 
 
 function renderAlreadyRead(result) {
-    if (!wantToReadList.includes(result.isbn)) {
-        wantToReadList.push(result.isbn)
-        const wantToReadCard = document.createElement('li');
-        wantToReadCard.className = 'want-to-read-card'; 
-        wantToReadCard.id = `want:${result.isbn[0]}`
-        wantToReadCard.innerHTML = `
+    if (!alreadyReadList.includes(result.isbn)) {
+        alreadyReadList.push(result.isbn)
+        const alreadyReadCard = document.createElement('li');
+        alreadyReadCard.className = 'want-to-read-card'; 
+        alreadyReadCard.id = `want:${result.isbn[0]}`
+        alreadyReadCard.innerHTML = `
             <button id = 'delete'> X </button>
             <p><strong>Title: <em>${result.title}</em></strong></h3>
             <p><strong>Author(s)</strong>: ${result.author}</h3>
-            <button id = "read-want"> read it! </button>
+            <button id = "already-read"> read it! </button>
         `
-        document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
-    } else if (haveReadyList.includes(result.isbn){
-        alert(`you've already read this book!`)
+        document.querySelector('.my-favorite-reads').appendChild(alreadyReadCard); 
     } else {
-        alert(`You've already added this book!`)
-    }
-    
+        alert(`you've already read this book!`)
+    } 
 }; 
 
-function renderHaveReadList() {
-    const haveReadList = []; 
+function renderAlreadyReadList() {
     fetch('http://localhost:3000/alreadyRead')
     .then(response => response.json())
-    .then(data => data.forEach(result => renderHaveRead(result)))
+    .then(data => data.forEach(result => renderAlreadyRead(result)))
 }; 
 
-function renderHaveRead(result) {
-    if (!haveList.includes(result.isbn)) {
-        haveReadList.push(result.isbn)
-        const haveReadCard = document.createElement('li');
-        haveCard.className = 'have-read-card'; 
-        haveCard.id = `have:${result.isbn[0]}`
-        haveCard.innerHTML = `
-            <p><strong>Title: <em>${result.title}</em></strong></h3>
-            <p><strong>Author(s)</strong>: ${result.author}</h3>
-        `
-        document.querySelector('.have-read-container').appendChild(wantToReadCard); 
-    } else {
-        alert(`you've already added this book!`)
-    }
-}; 
+
+//Ideas for future: 
+    // add sort functions on each list (A/Z by Author, by Title)
+    // add Star ratings when marking a book read, show have read sorted by rank
+
