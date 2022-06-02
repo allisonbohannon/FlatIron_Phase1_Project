@@ -77,10 +77,10 @@ function renderSearchResult(result) {
         const isbn = e.target.parentNode.id; 
         fetchWantToRead(isbn); 
     })
-    /*resultCard.querySelector('.already-read-button').addEventListener('click', (e) => {
+    resultCard.querySelector('.already-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
         addAlreadyRead(isbn); 
-    })*/
+    })
     document.getElementById('search-results').appendChild(resultCard);
 };
 
@@ -146,11 +146,52 @@ function renderWantToRead(result) {
     }
 }; 
 
-function fetchAlreadyRead(isbn) {}; 
+function fetchAlreadyRead(isbn) {
+    fetch(`http://openlibrary.org/search.json?q=${isbn}`)
+    .then(response => response.json())
+    .then(searchResults => postAlreadyRead(searchResults.docs[0]))
+}; 
 
-function postAlreadyRead(isbn) {}; 
+function postAlreadyRead(isbn) {
+    const alreadyReadObj = {
+        title: result.title,
+        author: result.author_name, 
+        pages: result.number_of_pages_median, 
+        yearPublished: result.first_publish_year, 
+        subjects: result.subject,
+        isbn: result.isbn[0]
+    }; 
+    console.log(alreadyReadObj)
+    fetch('http://localhost:3000/alreadyRead', {
+        method:'POST', 
+        headers:{ "Content-Type": "application/json",
+        Accept: "application/json"},
+        body: JSON.stringify(alreadyReadObj),
+    })
+    .then(response => response.json())
+    .then(data => renderAlreadyRead(data)); 
+}; 
 
-function renderAlreadyRead(result) {}; 
+function renderAlreadyRead(result) {
+    if (!wantToReadList.includes(result.isbn)) {
+        wantToReadList.push(result.isbn)
+        const wantToReadCard = document.createElement('li');
+        wantToReadCard.className = 'want-to-read-card'; 
+        wantToReadCard.id = `want:${result.isbn[0]}`
+        wantToReadCard.innerHTML = `
+            <button id = 'delete'> X </button>
+            <p><strong>Title: <em>${result.title}</em></strong></h3>
+            <p><strong>Author(s)</strong>: ${result.author}</h3>
+            <button id = "read-want"> read it! </button>
+        `
+        document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
+    } else if (haveReadyList.includes(result.isbn){
+        alert(`you've already read this book!`)
+    } else {
+        alert(`You've already added this book!`)
+    }
+    
+}; 
 
 function renderHaveReadList() {
     const haveReadList = []; 
