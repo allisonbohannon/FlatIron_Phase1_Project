@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    renderWantToReadList(); 
+
+    renderHaveReadList(); 
+
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault();
         const searchType = document.querySelector('select').value
@@ -6,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         getSearchResults(searchType, searchTerm); 
     })
 }); 
-
 
 //After a user has entered data in the search form, request openlibrary API for results
 function getSearchResults(searchType, searchTerm) {
@@ -115,17 +119,58 @@ function postWantToRead(result) {
 
 function renderWantToReadList() {
     //initiate list; potentially create blocker to keep from adding dupes 
+    const wantToReadList = []; 
+    fetch('http://localhost:3000/wants')
+    .then(response => response.json())
+    .then(data => data.forEach(result => renderWantToRead(result)))
 }
-
+//Render persistent cards for books on want to read list
+//Check to alert user if they already have a book on another list
 function renderWantToRead(result) {
-    const wantToReadCard = document.createElement('li');
-    wantToReadCard.innerHTML = `
-        <p><strong>Title: <em>${result.title}</em></strong></h3>
-        <p><strong>Author(s)</strong>: ${result.author}</h3>
-    `
-    document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
+    if (!wantToReadList.includes(result.isbn)) {
+        wantToReadList.push(result.isbn)
+        const wantToReadCard = document.createElement('li');
+        wantToReadCard.className = 'want-to-read-card'; 
+        wantToReadCard.id = `want:${result.isbn[0]}`
+        wantToReadCard.innerHTML = `
+            <button id = 'delete'> X </button>
+            <p><strong>Title: <em>${result.title}</em></strong></h3>
+            <p><strong>Author(s)</strong>: ${result.author}</h3>
+            <button id = "read-want"> read it! </button>
+        `
+        document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
+    } else if (haveReadyList.includes(result.isbn){
+        alert(`you've already read this book!`)
+    } else {
+        alert(`You've already added this book!`)
+    }
 }; 
 
-function addAlreadyRead(isbn) {}; 
+function fetchAlreadyRead(isbn) {}; 
+
+function postAlreadyRead(isbn) {}; 
 
 function renderAlreadyRead(result) {}; 
+
+function renderHaveReadList() {
+    const haveReadList = []; 
+    fetch('http://localhost:3000/alreadyRead')
+    .then(response => response.json())
+    .then(data => data.forEach(result => renderHaveRead(result)))
+}; 
+
+function renderHaveRead(result) {
+    if (!haveList.includes(result.isbn)) {
+        haveReadList.push(result.isbn)
+        const haveReadCard = document.createElement('li');
+        haveCard.className = 'have-read-card'; 
+        haveCard.id = `have:${result.isbn[0]}`
+        haveCard.innerHTML = `
+            <p><strong>Title: <em>${result.title}</em></strong></h3>
+            <p><strong>Author(s)</strong>: ${result.author}</h3>
+        `
+        document.querySelector('.have-read-container').appendChild(wantToReadCard); 
+    } else {
+        alert(`you've already added this book!`)
+    }
+}; 
