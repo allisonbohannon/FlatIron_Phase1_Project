@@ -52,7 +52,7 @@ function renderSearchResults(results) {
         results.forEach(result => {
             const titleAuthor = {
                 title: result.title, 
-                author: result.author_name,
+                author: result.author_name[0],
             }
             if(!displayedResults.includes(titleAuthor) && Array.isArray(result.isbn)) {
                 renderSearchResult(result)
@@ -70,9 +70,9 @@ function renderSearchResult(result) {
     resultCard.className = 'result-card'
     resultCard.id = `${result.isbn[0]}`
     resultCard.innerHTML = `
-        <p><strong>Title: <em>${result.title}</em></strong></h3>
+        <h4><strong>Title: <em>${result.title}</em></strong></h3>
         <p><strong>Author(s)</strong>: ${result.author_name}</h3>
-        <p id = 'published-year' ><strong>Published:</strong> ${result.first_publish_year}</p>
+        <p class = 'published-year' >Published: ${result.first_publish_year}</p>
         <button class = 'want-to-read-button'>want to read</button>
         <button class = 'already-read-button'>already read</button>
     `
@@ -103,7 +103,7 @@ function fetchWantToRead(isbn) {
 function postWantToRead(result) {
     const wantToReadObj = {
         title: result.title,
-        author: result.author_name, 
+        author: result.author_name[0], 
         pages: result.number_of_pages_median, 
         yearPublished: result.first_publish_year, 
         subjects: result.subject,
@@ -132,19 +132,30 @@ function renderWantToRead(result) {
         wantToReadList.push(result.isbn)
         const wantToReadCard = document.createElement('li');
         wantToReadCard.className = 'want-to-read-card'; 
-        wantToReadCard.id = `want:${result.isbn[0]}`
+        wantToReadCard.name = result.isbn[0]
         wantToReadCard.innerHTML = `
-            <button id = 'delete'> X </button>
-            <p><strong>Title: <em>${result.title}</em></strong></h3>
-            <p><strong>Author(s)</strong>: ${result.author}</h3>
-            <button id = "read-want"> read it! </button>
+            <div class = 'card-header'>
+                <h3><strong>Title: <em>${result.title}</em></strong></h3>
+                <button class = 'delete'> X </button>
+            </div> 
+            <div class = 'card-body'>
+            <h4><strong>Author(s)</strong>: ${result.author}</h3>
+            </div>
+            <button class = "read-want"> read it! </button>
         `
+        wantToReadCard.querySelector('.read-want').addEventListener('click', (e) => {
+            const isbn = e.target.parentNode.name; 
+            console.log(isbn)
+            fetchAlreadyRead(isbn); 
+            e.target.parentNode.delete
+        }); 
+
         document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
     } else if (alreadyReadList.includes(result.isbn)) {
         alert(`you've already read this book!`)
-    } else {
+    } /*else if (wantToReadList.includes(result.isbn)) {
         alert(`You've already added this book!`)
-    }
+    }*/
 }; 
 
 function fetchAlreadyRead(isbn) {
@@ -176,15 +187,13 @@ function postAlreadyRead(result) {
 function renderAlreadyRead(result) {
     if (!alreadyReadList.includes(result.isbn)) {
         alreadyReadList.push(result.isbn)
-        const alreadyReadCard = document.createElement('li');
-        alreadyReadCard.className = 'want-to-read-card'; 
+        const alreadyReadCard = document.createElement('div');
+        alreadyReadCard.className = 'already-read-card'; 
         alreadyReadCard.id = `want:${result.isbn[0]}`
         alreadyReadCard.innerHTML = `
-            <button id = 'delete'> X </button>
             <p><strong>Title: <em>${result.title}</em></strong></h3>
             <p><strong>Author(s)</strong>: ${result.author}</h3>
-            <button id = "already-read"> read it! </button>
-        `
+            `
         document.querySelector('.my-favorite-reads').appendChild(alreadyReadCard); 
     } else {
         alert(`you've already read this book!`)
