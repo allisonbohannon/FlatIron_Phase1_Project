@@ -30,15 +30,16 @@ ul {
     list-style: none; 
 }
 
-li {
+li.result-card {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     border: 1px solid gray; 
     margin: 8px;
     padding: 10px; 
     background-color: rgb(249, 249, 240);
-    box-shadow: 3px 4px rgb(163, 163, 117);
     list-style: none; 
     line-height: 1em;
+    position: relative;
+    left: -49px; 
 }
 
 .search-container {
@@ -72,7 +73,7 @@ li {
     margin: 0px; 
 }
 
-.delete {
+button.delete {
     align-self: top;
     justify-self: right;
 }
@@ -93,7 +94,8 @@ li {
 
 .stats {
     background-color: rgb(249, 249, 240);
-    box-shadow: 3px 4px rgb(163, 163, 117);   
+    border: 1px solid gray; 
+    padding: 8px;   
 }
 
 
