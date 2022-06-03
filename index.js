@@ -1,12 +1,6 @@
-const wantToReadList = []; 
-const alreadyReadList= []; 
+const readList= []; 
 
 document.addEventListener('DOMContentLoaded', () => {
-    
-    renderWantToReadList(); 
-
-    renderAlreadyReadList(); 
-
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault();
         const searchType = document.querySelector('select').value
@@ -68,21 +62,17 @@ function renderSearchResults(results) {
 function renderSearchResult(result) {
     const resultCard = document.createElement('li'); 
     resultCard.className = 'result-card'
-    resultCard.id = `${result.isbn[0]}`
+    resultCard.id = result.isbn[0]
     resultCard.innerHTML = `
         <h4><strong>Title: <em>${result.title}</em></strong></h3>
         <p><strong>Author(s)</strong>: ${result.author_name}</h3>
         <p class = 'published-year' >Published: ${result.first_publish_year}</p>
-        <button class = 'want-to-read-button'>want to read</button>
-        <button class = 'already-read-button'>already read</button>
+        <button class = 'add-read-button'>add read</button>
     `
-    resultCard.querySelector('.want-to-read-button').addEventListener('click', (e) => {
+    resultCard.querySelector('.add-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
-        fetchWantToRead(isbn); 
-    })
-    resultCard.querySelector('.already-read-button').addEventListener('click', (e) => {
-        const isbn = e.target.parentNode.id; 
-        fetchAlreadyRead(isbn); 
+        console.log(isbn)
+        fetchRead(isbn); 
     })
     document.getElementById('search-results').appendChild(resultCard);
 };
@@ -94,117 +84,102 @@ function removeAllChildNodes(parent) {
     }
 }
 
-function fetchWantToRead(isbn) {
+function fetchRead(isbn) {
     fetch(`http://openlibrary.org/search.json?q=${isbn}`)
     .then(response => response.json())
-    .then(searchResults => postWantToRead(searchResults.docs[0]))
+    .then(searchResults => addRead(searchResults.docs[0]))
 }; 
 
-function postWantToRead(result) {
-    const wantToReadObj = {
-        title: result.title,
-        author: result.author_name[0], 
-        pages: result.number_of_pages_median, 
-        yearPublished: result.first_publish_year, 
-        subjects: result.subject,
-        isbn: result.isbn[0]
-    }; 
-    console.log(wantToReadObj)
-    fetch('http://localhost:3000/wants', {
-        method:'POST', 
-        headers:{ "Content-Type": "application/json",
-        Accept: "application/json"},
-        body: JSON.stringify(wantToReadObj),
-    })
-    .then(response => response.json())
-    .then(data => renderWantToRead(data)); 
-}
-
-function renderWantToReadList() {
-    fetch('http://localhost:3000/wants')
-    .then(response => response.json())
-    .then(data => data.forEach(result => renderWantToRead(result, wantToReadList)))
-}
-//Render persistent cards for books on want to read list
-//Check to alert user if they already have a book on another list
-function renderWantToRead(result) {
-    if (!wantToReadList.includes(result.isbn)) {
-        wantToReadList.push(result.isbn)
-        const wantToReadCard = document.createElement('li');
-        wantToReadCard.className = 'want-to-read-card'; 
-        wantToReadCard.name = result.isbn[0]
-        wantToReadCard.innerHTML = `
-            <div class = 'card-header'>
-                <h3><strong>Title: <em>${result.title}</em></strong></h3>
-                <button class = 'delete'> X </button>
-            </div> 
-            <div class = 'card-body'>
-            <h4><strong>Author(s)</strong>: ${result.author}</h3>
-            </div>
-            <button class = "read-want"> read it! </button>
-        `
-        wantToReadCard.querySelector('.read-want').addEventListener('click', (e) => {
-            const isbn = e.target.parentNode.name; 
-            console.log(isbn)
-            fetchAlreadyRead(isbn); 
-            e.target.parentNode.delete
-        }); 
-
-        document.querySelector('.want-to-read-container').appendChild(wantToReadCard); 
-    } else if (alreadyReadList.includes(result.isbn)) {
-        alert(`you've already read this book!`)
-    } /*else if (wantToReadList.includes(result.isbn)) {
-        alert(`You've already added this book!`)
-    }*/
-}; 
-
-function fetchAlreadyRead(isbn) {
-    fetch(`http://openlibrary.org/search.json?q=${isbn}`)
-    .then(response => response.json())
-    .then(searchResults => postAlreadyRead(searchResults.docs[0]))
-}; 
-
-function postAlreadyRead(result) {
-    const alreadyReadObj = {
+function addRead(result) {
+    const book = {
         title: result.title,
         author: result.author_name, 
         pages: result.number_of_pages_median, 
         yearPublished: result.first_publish_year, 
         subjects: result.subject,
-        isbn: result.isbn[0]
     }; 
-    console.log(alreadyReadObj)
-    fetch('http://localhost:3000/alreadyRead', {
-        method:'POST', 
-        headers:{ "Content-Type": "application/json",
-        Accept: "application/json"},
-        body: JSON.stringify(alreadyReadObj),
-    })
-    .then(response => response.json())
-    .then(data => renderAlreadyRead(data)); 
+    readList.push(book); 
+    renderRead(book); 
+    updateStats(); 
 }; 
 
-function renderAlreadyRead(result) {
-    if (!alreadyReadList.includes(result.isbn)) {
-        alreadyReadList.push(result.isbn)
-        const alreadyReadCard = document.createElement('div');
-        alreadyReadCard.className = 'already-read-card'; 
-        alreadyReadCard.id = `want:${result.isbn[0]}`
-        alreadyReadCard.innerHTML = `
-            <p><strong>Title: <em>${result.title}</em></strong></h3>
-            <p><strong>Author(s)</strong>: ${result.author}</h3>
+function renderRead(book) {
+    const readCard = document.createElement('div');
+        readCard.className = 'read-card'; 
+        readCard.innerHTML = `
+            <p><strong>Title: <em>${book.title}</em></strong></h3>
+            <p><strong>Author(s)</strong>: ${book.author}</h3>
             `
-        document.querySelector('.my-favorite-reads').appendChild(alreadyReadCard); 
-    } else {
-        alert(`you've already read this book!`)
-    } 
+    document.querySelector('.read-container').appendChild(readCard); 
 }; 
 
-function renderAlreadyReadList() {
-    fetch('http://localhost:3000/alreadyRead')
-    .then(response => response.json())
-    .then(data => data.forEach(result => renderAlreadyRead(result)))
-}; 
+function updateStats() {
+    document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
+    document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
+    document.querySelector('#average-years').textContent = `average age: ${averageAge()} years`
+    document.querySelector('#favorite-subjects').textContent = `favorite subjects: ${favSubjects()}`
+}
+
+function booksRead() {
+    return readList.length; 
+}
+
+function pagesRead() {
+    return readList.reduce((a, b) => a + b.pages, 0)
+}
+
+function averageAge() {
+    const ageArray = []; 
+    const today = new Date(); 
+    const thisYear = today.getFullYear(); 
+
+    for (book of readList) {
+        ageArray.push(thisYear - book.yearPublished)
+    }
+
+    return Math.round(ageArray.reduce((a,b) => a + b, 0) / ageArray.length); 
+}
+//Find the subject with the highest frequency of occurences in the list of books
+function favSubjects() {
+    const subjectArray = []; 
+    const subjectFrequency = []
+
+    //create a flattened array of subjects, as each books subject is returned as an array
+    for (book of readList) {
+        for (subject of book.subjects) {
+            subjectArray.push(subject)
+        }
+    }
+    //create a list that removes duplicates; iterate through the deDuped array to find how often each subject occurs in the total subject list
+    //Create an array of objects that holds subject + frequency data
+    for (subject of subjectArray) {
+        const deDupedList = []
+        if (!deDupedList.includes(subject)) {
+            deDupedList.push(subject)
+            const count = subjectArray.filter(index => index === subject ).length; 
+            const subjObj = {
+                subject: subject, 
+                count: count,
+            }
+            subjectFrequency.push(subjObj)
+        }
+    }
+    //create an array of frequencies to find the max
+    const countArray = []; 
+    subjectFrequency.forEach(subject => {
+        countArray.push(subject.count);
+    })
+
+
+    //Find the subject matching the frequency in the array of objects
+    const maxCount = Math.max(...countArray)
+    console.log(maxCount)
+    return subjectFrequency.find(subject => subject.count === maxCount).subject; 
+}
+ 
+
+
+
 
 
 //Ideas for future: 
