@@ -1,6 +1,7 @@
 const readList= []; 
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateStats(); 
     document.querySelector('form').addEventListener('submit', (e) => {
         e.preventDefault();
         const searchType = document.querySelector('select').value
@@ -97,6 +98,7 @@ function addRead(result) {
         pages: result.number_of_pages_median, 
         yearPublished: result.first_publish_year, 
         subjects: result.subject,
+        id: result.isbn[0]
     }; 
     readList.push(book); 
     renderRead(book); 
@@ -106,6 +108,7 @@ function addRead(result) {
 function renderRead(book) {
     const readCard = document.createElement('div');
         readCard.className = 'read-card'; 
+        readCard.id = book.id; 
         readCard.innerHTML = `
             <section class = 'card-header'>
             <button class = 'delete'> X </button>
@@ -116,15 +119,22 @@ function renderRead(book) {
             `
     
     readCard.querySelector('.delete').addEventListener('click', (e) => {
-      e.target.parentNode.parentNode.removeChild(e.target.parentNode); 
+        deleteRead(e.target.parentNode.id)
+        e.target.parentNode.parentNode.removeChild(e.target.parentNode); 
     }); 
     document.querySelector('.read-container').appendChild(readCard); 
+}; 
+
+function deleteRead(id) {
+    const deleteIndex = readList.findIndex(bookObj => bookObj.id === id); 
+    readList.splice(deleteIndex, 1); 
+    updateStats(); 
 }; 
 
 function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
-    document.querySelector('#average-years').textContent = `average age: ${averageAge()} years`
+    document.querySelector('#average-years').textContent = `average age: ${averageAge()}`
     document.querySelector('#favorite-subjects').textContent = `favorite subjects: ${favSubjects()}`
 }
 
@@ -137,6 +147,10 @@ function pagesRead() {
 }
 
 function averageAge() {
+    if (readList.length === 0) {
+        return ''
+    }
+
     const ageArray = []; 
     const today = new Date(); 
     const thisYear = today.getFullYear(); 
@@ -145,10 +159,14 @@ function averageAge() {
         ageArray.push(thisYear - book.yearPublished)
     }
 
-    return Math.round(ageArray.reduce((a,b) => a + b, 0) / ageArray.length); 
+    return `${Math.round(ageArray.reduce((a,b) => a + b, 0) / ageArray.length)} years`; 
 }
 //Find the subject with the highest frequency of occurences in the list of books
 function favSubjects() {
+    if (readList.length === 0) {
+        return ''
+    }
+
     const subjectArray = []; 
     const subjectFrequency = []
 
