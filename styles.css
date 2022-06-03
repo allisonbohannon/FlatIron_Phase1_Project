@@ -3,6 +3,7 @@ body {
     background-color: rgb(163, 163, 117)
 }
 
+
 h1 {
     display: flex;
     justify-content: center;
@@ -22,6 +23,7 @@ main {
 main div {
     background-color: beige;
     padding: 20px; 
+    
 }
 
 ul {
@@ -35,34 +37,54 @@ li {
     padding: 10px; 
     background-color: rgb(249, 249, 240);
     box-shadow: 3px 4px rgb(163, 163, 117);
-    max-width: 80%;
-}
-
-button {
-    font-family:  font-family: 'Special Elite', cursive;
+    list-style: none; 
+    line-height: 1em;
 }
 
 .search-container {
-   display: block; 
    justify-items: space-around;
-   max-width: 45%;
+   max-width: 30%;
    min-height: 400px; 
 }
 
+.results-card {
+    display: flex; 
+}
+
+#published-year {
+    font-size: 12px; 
+}
+
 .want-to-read-container {
-    min-width: 25%; 
-    height: 80%; 
+    max-width: 30%;
     min-height: 400px; 
+   
 }
 
-.have-read-container  {
-    min-width: 25%; 
+.card-header {
+    display: flex; 
+    background-color: inherit;
+    padding: 0px;
+    margin: 0px; 
 }
 
-.hidden {
-    visibility: hidden;
-    font-size: 1px; 
-    height: 80%; 
+.card-body {
+    background-color: inherit;
+    padding: 0px;
+    margin: 0px; 
+}
+
+.read-container  {
+    max-width: 30%; 
+}
+
+.read-card {
+   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.stats {
+    background-color: rgb(249, 249, 240);
+    box-shadow: 3px 4px rgb(163, 163, 117);   
 }
 
 
