@@ -43,7 +43,7 @@ li {
 
 .search-container {
    justify-items: space-around;
-   max-width: 30%;
+   width: 30%;
    min-height: 400px; 
 }
 
@@ -55,17 +55,26 @@ li {
     font-size: 12px; 
 }
 
-.want-to-read-container {
-    max-width: 30%;
+.read-container {
+    width: 30%;
     min-height: 400px; 
    
 }
 
+.read-card {
+    display: block; 
+}
+
 .card-header {
-    display: flex; 
+    display: inline; 
     background-color: inherit;
     padding: 0px;
     margin: 0px; 
+}
+
+.delete {
+    align-self: top;
+    justify-self: right;
 }
 
 .card-body {
@@ -74,8 +83,8 @@ li {
     margin: 0px; 
 }
 
-.read-container  {
-    max-width: 30%; 
+.stats-container  {
+   width: 30%; 
 }
 
 .read-card {

@@ -107,9 +107,17 @@ function renderRead(book) {
     const readCard = document.createElement('div');
         readCard.className = 'read-card'; 
         readCard.innerHTML = `
+            <section class = 'card-header'>
+            <button class = 'delete'> X </button>
             <p><strong>Title: <em>${book.title}</em></strong></h3>
+            
+            <section>
             <p><strong>Author(s)</strong>: ${book.author}</h3>
             `
+    
+    readCard.querySelector('.delete').addEventListener('click', (e) => {
+      e.target.parentNode.parentNode.removeChild(e.target.parentNode); 
+    }); 
     document.querySelector('.read-container').appendChild(readCard); 
 }; 
 
