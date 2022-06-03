@@ -72,7 +72,6 @@ function renderSearchResult(result) {
     `
     resultCard.querySelector('.add-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
-        console.log(isbn)
         fetchRead(isbn); 
     })
     document.getElementById('search-results').appendChild(resultCard);
@@ -135,7 +134,7 @@ function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
     document.querySelector('#average-years').textContent = `average age: ${averageAge()}`
-    document.querySelector('#favorite-subjects').textContent = `favorite subjects: ${favSubjects()}`
+    favSubjects(); 
 }
 
 function booksRead() {
@@ -163,6 +162,9 @@ function averageAge() {
 }
 //Find the subject with the highest frequency of occurences in the list of books
 function favSubjects() {
+    
+    removeAllChildNodes(document.querySelector('#favorite-subjects-list'))
+
     if (readList.length === 0) {
         return ''
     }
@@ -172,8 +174,12 @@ function favSubjects() {
 
     //create a flattened array of subjects, as each books subject is returned as an array
     for (book of readList) {
-        for (subject of book.subjects) {
-            subjectArray.push(subject)
+        //debugger; 
+        if (!book.subjects === undefined) {
+            //debugger; 
+            for (subject of book.subjects) {
+                subjectArray.push(subject)
+            }
         }
     }
     //create a list that removes duplicates; iterate through the deDuped array to find how often each subject occurs in the total subject list
@@ -190,17 +196,29 @@ function favSubjects() {
             subjectFrequency.push(subjObj)
         }
     }
-    //create an array of frequencies to find the max
-    const countArray = []; 
-    subjectFrequency.forEach(subject => {
-        countArray.push(subject.count);
-    })
+
+    //looop through frequency calcs 5x to find the top subject, delete winner from array to find next most frequent
+    for (let i = 0; i < 5; i++) {
+    //Create an array of frequencies to find the max
+        const countArray = []; 
+        subjectFrequency.forEach(subject => {
+            countArray.push(subject.count);
+        })
 
 
-    //Find the subject matching the frequency in the array of objects
-    const maxCount = Math.max(...countArray)
-    console.log(maxCount)
-    return subjectFrequency.find(subject => subject.count === maxCount).subject; 
+        //Find the subject matching the frequency in the array of objects
+        const maxCount = Math.max(...countArray)
+        const index = subjectFrequency.findIndex(subject => subject.count === maxCount); 
+
+        const freqSubject = subjectFrequency[index].subject; 
+
+        subjectFrequency.slice(index, 1); 
+        console.log(subjectFrequency); 
+
+        const freqLi = document.createElement('li'); 
+        freqLi.textContent = `${i+1} : ${freqSubject}`; 
+        document.querySelector('#favorite-subjects-list').appendChild(freqLi); 
+    }
 }
  
 
