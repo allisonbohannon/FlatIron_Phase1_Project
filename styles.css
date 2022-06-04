@@ -38,26 +38,38 @@ li.result-card {
     background-color: rgb(249, 249, 240);
     list-style: none; 
     line-height: 1em;
+    width: 100%; 
     position: relative;
     left: -49px; 
+    display: inline-flex; 
 }
 
 .search-container {
    justify-items: space-around;
-   width: 30%;
+   width: 40%;
    min-height: 400px; 
 }
 
 .results-card {
-    display: flex; 
+    display: inline-block; 
+    align-items: center;
+    justify-content: space-evenly;
 }
 
-#published-year {
-    font-size: 12px; 
+.img-container {
+    align-content: center;
+    justify-content: end;
+    max-width: 20;
+}
+
+
+img {
+    padding: 5px; 
+    height: 10em; 
 }
 
 .read-container {
-    width: 30%;
+    width: 20%;
     min-height: 400px; 
    
 }
@@ -89,7 +101,7 @@ button.delete {
 }
 
 .stats-container  {
-   width: 30%; 
+   width: 20%; 
 }
 
 
