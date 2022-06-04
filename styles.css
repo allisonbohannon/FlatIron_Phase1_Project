@@ -63,11 +63,12 @@ li.result-card {
 }
 
 .read-card {
-    display: block; 
+    display: inline-flex;  
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .card-header {
-    display: inline; 
+    display: block; 
     background-color: inherit;
     padding: 0px;
     margin: 0px; 
@@ -76,6 +77,9 @@ li.result-card {
 button.delete {
     align-self: top;
     justify-self: right;
+    height: 1.5em; 
+    background-color: inherit;
+    border: none; 
 }
 
 .card-body {
@@ -88,9 +92,7 @@ button.delete {
    width: 30%; 
 }
 
-.read-card {
-   font-family: Verdana, Geneva, Tahoma, sans-serif;
-}
+
 
 .stats {
     background-color: rgb(249, 249, 240);

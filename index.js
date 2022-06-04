@@ -123,12 +123,13 @@ function renderRead(book) {
         readCard.className = 'read-card'; 
         readCard.id = book.id; 
         readCard.innerHTML = `
-            <section class = 'card-header'>
-            <button class = 'delete'> X </button>
-            <p><strong>Title: <em>${book.title}</em></strong></h3>
+            <button class = 'delete'> X </button> 
+            <div class = 'card-header'>
+                <p><strong>Title: <em>${book.title}</em></strong></h3>
+                <p><strong>Author(s)</strong>: ${book.author}</h3>
+            <div>
             
-            <section>
-            <p><strong>Author(s)</strong>: ${book.author}</h3>
+           
             `
     
     readCard.querySelector('.delete').addEventListener('click', (e) => {
