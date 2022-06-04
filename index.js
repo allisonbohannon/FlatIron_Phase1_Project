@@ -72,8 +72,13 @@ function renderSearchResult(result) {
     `
     resultCard.querySelector('.add-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
-        fetchRead(isbn); 
-    })
+        if (checkIfAlreadyOnList(isbn) === true) {
+            fetchRead(isbn) 
+        } else {
+            alert('book already added!')
+        }
+    }); 
+
     document.getElementById('search-results').appendChild(resultCard);
 };
 
@@ -89,6 +94,15 @@ function fetchRead(isbn) {
     .then(response => response.json())
     .then(searchResults => addRead(searchResults.docs[0]))
 }; 
+
+function checkIfAlreadyOnList(isbn) {
+    for (book of readList) {
+        if (book.id === isbn) {
+            return false; 
+        }
+    }
+    return true; 
+}
 
 function addRead(result) {
     const book = {
@@ -133,7 +147,7 @@ function deleteRead(id) {
 function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
-    document.querySelector('#average-years').textContent = `average age: ${averageAge()}`
+    document.querySelector('#average-years').textContent = `average book age: ${averageAge()}`
     favSubjects(); 
 }
 
@@ -169,24 +183,28 @@ function favSubjects() {
         return ''
     }
 
-    const subjectArray = []; 
-    const subjectFrequency = []
-
+    let subjectArray = []; 
+    let subjectFrequency = []
+   
     //create a flattened array of subjects, as each books subject is returned as an array
     for (book of readList) {
-        //debugger; 
-        if (!book.subjects === undefined) {
-            //debugger; 
+        if (book.subjects === undefined) {
+        } else {
             for (subject of book.subjects) {
                 subjectArray.push(subject)
-            }
-        }
+            }  
+        }    
     }
+    console.log(subjectArray.length)
     //create a list that removes duplicates; iterate through the deDuped array to find how often each subject occurs in the total subject list
     //Create an array of objects that holds subject + frequency data
+    if (subjectArray.length === 0) {
+        return ''
+    }
+    let deDupedList = []
     for (subject of subjectArray) {
-        const deDupedList = []
-        if (!deDupedList.includes(subject)) {
+        
+        if (! deDupedList.includes(subject)) {
             deDupedList.push(subject)
             const count = subjectArray.filter(index => index === subject ).length; 
             const subjObj = {
@@ -196,8 +214,9 @@ function favSubjects() {
             subjectFrequency.push(subjObj)
         }
     }
+    console.log(subjectFrequency)
 
-    //looop through frequency calcs 5x to find the top subject, delete winner from array to find next most frequent
+    //loop through frequency calcs 5x to find the top subject, delete winner from array to find next most frequent
     for (let i = 0; i < 5; i++) {
     //Create an array of frequencies to find the max
         const countArray = []; 
@@ -209,11 +228,11 @@ function favSubjects() {
         //Find the subject matching the frequency in the array of objects
         const maxCount = Math.max(...countArray)
         const index = subjectFrequency.findIndex(subject => subject.count === maxCount); 
-
+        
         const freqSubject = subjectFrequency[index].subject; 
-
-        subjectFrequency.slice(index, 1); 
-        console.log(subjectFrequency); 
+        
+        subjectFrequency.splice(index, 1); 
+       
 
         const freqLi = document.createElement('li'); 
         freqLi.textContent = `${i+1} : ${freqSubject}`; 
