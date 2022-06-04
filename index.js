@@ -61,10 +61,12 @@ function renderSearchResults(results) {
 //Each card has two buttons: one to add to a want to read list, the other to an already read list
 //The card id is the book's isbn, which will be used as a key to add a book to the other lists
 function renderSearchResult(result) {
+    const url = `https://covers.openlibrary.org/b/ISBN/${result.isbn[0]}-S.jpg`
     const resultCard = document.createElement('li'); 
     resultCard.className = 'result-card'
     resultCard.id = result.isbn[0]
     resultCard.innerHTML = `
+        <img src = ${url}>
         <h4><strong>Title: <em>${result.title}</em></strong></h3>
         <p><strong>Author(s)</strong>: ${result.author_name}</h3>
         <p class = 'published-year' >Published: ${result.first_publish_year}</p>
