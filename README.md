@@ -11,6 +11,7 @@
  * See stats about your reading habits: 
     * Total books
     * Total pages
+    + Average pages
     * Average book age
     * Favorite subjects
 
