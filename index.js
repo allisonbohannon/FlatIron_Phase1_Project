@@ -149,6 +149,7 @@ function deleteRead(id) {
 function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
+    document.querySelector('#average-pages').textContent = `average pages: ${averagePages()}`
     document.querySelector('#average-years').textContent = `average book age: ${averageAge()}`
     favSubjects(); 
 }
@@ -159,6 +160,10 @@ function booksRead() {
 
 function pagesRead() {
     return readList.reduce((a, b) => a + b.pages, 0)
+}
+
+function averagePages() {
+    return Math.round(pagesRead() / booksRead()); 
 }
 
 function averageAge() {
