@@ -66,13 +66,10 @@ function renderSearchResult(result) {
     resultCard.className = 'result-card'
     resultCard.id = result.isbn[0]
     resultCard.innerHTML = `
-        <section>
         <h4><strong>Title: <em>${result.title}</em></strong></h3>
         <p><strong>Author(s)</strong>: ${result.author_name}</h3>
         <p class = 'published-year' >Published: ${result.first_publish_year}</p>
         <button class = 'add-read-button'>add read</button>
-        </section>
-        <section class ='img-container'><img src = ${url}></section>
     `
     resultCard.querySelector('.add-read-button').addEventListener('click', (e) => {
         const isbn = e.target.parentNode.id; 
