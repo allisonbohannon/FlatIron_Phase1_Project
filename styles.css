@@ -41,7 +41,6 @@ li.result-card {
     width: 100%; 
     position: relative;
     left: -49px; 
-    display: inline-flex; 
 }
 
 .search-container {
@@ -50,23 +49,6 @@ li.result-card {
    min-height: 400px; 
 }
 
-.results-card {
-    display: inline-block; 
-    align-items: center;
-    justify-content: space-evenly;
-}
-
-.img-container {
-    align-content: center;
-    justify-content: end;
-    max-width: 20;
-}
-
-
-img {
-    padding: 5px; 
-    height: 10em; 
-}
 
 .read-container {
     width: 20%;
