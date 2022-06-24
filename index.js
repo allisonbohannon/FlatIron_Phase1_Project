@@ -163,10 +163,16 @@ function pagesRead() {
 }
 
 function averagePages() {
+    if (booksRead() === 0) {
+        return 0; 
+    }
     return Math.round(pagesRead() / booksRead()); 
 }
 
 function averageAge() {
+    if (booksRead() === 0) {
+        return 0; 
+    }
     if (readList.length === 0) {
         return ''
     }
@@ -224,7 +230,8 @@ function favSubjects() {
     console.log(subjectFrequency)
 
     //loop through frequency calcs 5x to find the top subject, delete winner from array to find next most frequent
-    for (let i = 0; i < 5; i++) {
+    const listNumbers = Math.min(5, subjectArray.length)
+    for (let i = 0; i < listNumbers; i++) {
     //Create an array of frequencies to find the max
         const countArray = []; 
         subjectFrequency.forEach(subject => {
