@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //After a user has entered data in the search form, request openlibrary API for results
 function getSearchResults(searchType, searchTerm) {
     const parsedSearch = `${parsedSearchType(searchType)}=${searchTerm.split(' ').join('+')}`
-    fetch(`http://openlibrary.org/search.json?${parsedSearch}`)
+    fetch(`https://openlibrary.org/search.json?${parsedSearch}`)
     .then(response => response.json())
     .then(searchResults => renderSearchResults(searchResults.docs))
 };
@@ -61,7 +61,6 @@ function renderSearchResults(results) {
 //Each card has two buttons: one to add to a want to read list, the other to an already read list
 //The card id is the book's isbn, which will be used as a key to add a book to the other lists
 function renderSearchResult(result) {
-    const url = `https://covers.openlibrary.org/b/ISBN/${result.isbn[0]}-M.jpg`
     const resultCard = document.createElement('li'); 
     resultCard.className = 'result-card'
     resultCard.id = result.isbn[0]
@@ -91,7 +90,7 @@ function removeAllChildNodes(parent) {
 }
 
 function fetchRead(isbn) {
-    fetch(`http://openlibrary.org/search.json?q=${isbn}`)
+    fetch(`https://openlibrary.org/search.json?q=${isbn}`)
     .then(response => response.json())
     .then(searchResults => addRead(searchResults.docs[0]))
 }; 
