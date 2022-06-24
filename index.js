@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //After a user has entered data in the search form, request openlibrary API for results
 function getSearchResults(searchType, searchTerm) {
     const parsedSearch = `${parsedSearchType(searchType)}=${searchTerm.split(' ').join('+')}`
-    fetch(`http://openlibrary.org/search.json?${parsedSearch}`)
+    fetch(`https://openlibrary.org/search.json?${parsedSearch}`)
     .then(response => response.json())
     .then(searchResults => renderSearchResults(searchResults.docs))
 };
@@ -90,7 +90,7 @@ function removeAllChildNodes(parent) {
 }
 
 function fetchRead(isbn) {
-    fetch(`http://openlibrary.org/search.json?q=${isbn}`)
+    fetch(`https://openlibrary.org/search.json?q=${isbn}`)
     .then(response => response.json())
     .then(searchResults => addRead(searchResults.docs[0]))
 }; 
