@@ -144,7 +144,7 @@ function deleteRead(id) {
     readList.splice(deleteIndex, 1); 
     updateStats(); 
 }; 
-
+//Function calls for all stats to populate html
 function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
