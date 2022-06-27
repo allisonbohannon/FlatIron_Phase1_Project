@@ -10,14 +10,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 }); 
 
-//After a user has entered data in the search form, request openlibrary API for results
 function getSearchResults(searchType, searchTerm) {
     const parsedSearch = `${parsedSearchType(searchType)}=${searchTerm.split(' ').join('+')}`
     fetch(`https://openlibrary.org/search.json?${parsedSearch}`)
     .then(response => response.json())
     .then(searchResults => renderSearchResults(searchResults.docs))
 };
-//Search parameter is based on whether user is searching by title, author, or subject 
+
 function parsedSearchType(searchType) {
     let parsedType; 
     switch(searchType) {
@@ -33,9 +32,7 @@ function parsedSearchType(searchType) {
     }
     return parsedType;
 }
-//Parent function for rendering search results to ensure clean data and alert user if no results
-//Clean up data by ensuring that all title/author combos are only displayed once
-//Clean up data by ensuring all entries have an ISBN
+
 function renderSearchResults(results) {
     if(results.length === 0) {
         document.getElementById('search-results').textContent = 'no results'; 
@@ -57,9 +54,7 @@ function renderSearchResults(results) {
     }
 }; 
 
-//Render individual, non persisting cards to display search results
-//Each card has two buttons: one to add to a want to read list, the other to an already read list
-//The card id is the book's isbn, which will be used as a key to add a book to the other lists
+
 function renderSearchResult(result) {
     const resultCard = document.createElement('li'); 
     resultCard.className = 'result-card'
@@ -82,7 +77,7 @@ function renderSearchResult(result) {
     document.getElementById('search-results').appendChild(resultCard);
 };
 
-//Clean up search results when entering a new search
+
 function removeAllChildNodes(parent) {
     while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
@@ -144,7 +139,7 @@ function deleteRead(id) {
     readList.splice(deleteIndex, 1); 
     updateStats(); 
 }; 
-//Function calls for all stats to populate html
+
 function updateStats() {
     document.querySelector('#books-read').textContent = `books read: ${booksRead()}`
     document.querySelector('#total-pages').textContent = `total pages: ${pagesRead()}`
@@ -186,7 +181,7 @@ function averageAge() {
 
     return `${Math.round(ageArray.reduce((a,b) => a + b, 0) / ageArray.length)} years`; 
 }
-//Find the subject with the highest frequency of occurences in the list of books
+
 function favSubjects() {
     
     removeAllChildNodes(document.querySelector('#favorite-subjects-list'))
@@ -208,8 +203,7 @@ function favSubjects() {
         }    
     }
     console.log(subjectArray.length)
-    //create a list that removes duplicates; iterate through the deDuped array to find how often each subject occurs in the total subject list
-    //Create an array of objects that holds subject + frequency data
+   
     if (subjectArray.length === 0) {
         return ''
     }
@@ -228,17 +222,17 @@ function favSubjects() {
     }
     console.log(subjectFrequency)
 
-    //loop through frequency calcs 5x to find the top subject, delete winner from array to find next most frequent
+   
     const listNumbers = Math.min(5, subjectArray.length)
     for (let i = 0; i < listNumbers; i++) {
-    //Create an array of frequencies to find the max
+   
         const countArray = []; 
         subjectFrequency.forEach(subject => {
             countArray.push(subject.count);
         })
 
 
-        //Find the subject matching the frequency in the array of objects
+       
         const maxCount = Math.max(...countArray)
         const index = subjectFrequency.findIndex(subject => subject.count === maxCount); 
         
@@ -258,7 +252,5 @@ function favSubjects() {
 
 
 
-//Ideas for future: 
-    // add sort functions on each list (A/Z by Author, by Title)
-    // add Star ratings when marking a book read, show have read sorted by rank
+
 
